@@ -12,9 +12,11 @@ if __name__ == '__main__':
     parser.add_argument("-s", "--stream", type=str, help="the stream you want to process", default=rs.stream.color)
     parser.add_argument("-f", "--format", type=str, help="The format corresponding to the data stream",
                         default=rs.format.rgb8)
-    parser.add_argument("--fps", type=str, help="bag file frame fps", default=30)
-    parser.add_argument("--size", type=str, help="the output video size, only when you want to output video",
-                        default=(1280, 720))
+    parser.add_argument("--fps", type=int, help="bag file frame fps", default=30)
+    parser.add_argument("--width", type=int, help="the output video width, only when you want to output video",
+                        default=1280)
+    parser.add_argument("--height", type=int, help="the output video height, only when you want to output video",
+                        default=720)
     # Parse the command line arguments to an object
     args = parser.parse_args()
 
@@ -26,5 +28,5 @@ if __name__ == '__main__':
     if os.path.isdir(args.output):
         Bag2video(args.input).bag2image(args.output, args.stream, args.format, args.fps)
     else:
-        Bag2video(args.input).bag2video(args.output, args.stream, args.format, args.fps, args.size)
+        Bag2video(args.input).bag2video(args.output, args.stream, args.format, args.fps, (args.width, args.height))
 
