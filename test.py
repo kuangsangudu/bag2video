@@ -9,9 +9,9 @@ if __name__ == '__main__':
     parser.add_argument("-i", "--input", type=str, help="Path to the bag file", required=True)
     parser.add_argument("-o", "--output", type=str, help="Path to the output file. e.g c:data/images for images"
                                                          "c:/data/output.mp4 for video", required=True)
-    parser.add_argument("-s", "--stream", type=str, help="the stream you want to process", default=rs.stream.color)
+    parser.add_argument("-s", "--stream", type=str, help="the stream you want to process", default="color")
     parser.add_argument("-f", "--format", type=str, help="The format corresponding to the data stream",
-                        default=rs.format.rgb8)
+                        default="rgb8")
     parser.add_argument("--fps", type=int, help="bag file frame fps", default=30)
     parser.add_argument("--width", type=int, help="the output video width, only when you want to output video",
                         default=1280)
@@ -24,6 +24,12 @@ if __name__ == '__main__':
     if os.path.splitext(args.input)[1] != ".bag":
         print("The given file is not of correct file format.")
         print("Only .bag files are accepted")
+        exit()
+    try:
+        args.stream = getattr(rs.stream, args.stream)
+        args.format = getattr(rs.format, args.format)
+    except:
+        print("You put the wrong stream or format")
         exit()
     if os.path.isdir(args.output):
         Bag2video(args.input).bag2image(args.output, args.stream, args.format, args.fps)
