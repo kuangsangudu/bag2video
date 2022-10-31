@@ -52,6 +52,7 @@ class Bag2video:
             # Configure the pipeline to stream the data stream
             # Change this parameters according to the recorded bag file resolution
             config.enable_stream(data_stream, data_format, fps)
+            # config.enable_all_streams()
 
             # Start streaming from file
             pipeline.start(config)
@@ -82,8 +83,13 @@ class Bag2video:
                 i += 1
         except RuntimeError:
             pass
+        except Exception as e:
+            logger.error("%s happened" % e)
         finally:
-            pipeline.stop()
+            try:
+                pipeline.stop()
+            except:
+                pass
             if video:
                 video.release()
 
