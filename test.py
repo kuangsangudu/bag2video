@@ -25,14 +25,32 @@ if __name__ == '__main__':
         print("The given file is not of correct file format.")
         print("Only .bag files are accepted")
         exit()
+
+    args.stream = args.stream.lower()
+    args.format = args.format.lower()
     try:
-        args.stream = getattr(rs.stream, args.stream)
         args.format = getattr(rs.format, args.format)
-    except:
-        print("You put the wrong stream or format")
+    except Exception as e:
+        print("You put the wrong format")
         exit()
-    if os.path.isdir(args.output):
-        Bag2video(args.input).bag2image(args.output, args.stream, args.format, args.fps)
+
+    if args.stream == "color":
+        is_color = True
+        args.stream = getattr(rs.stream, "color")
+    elif args.stream == "rgbd":
+        is_color = True
+        args.stream = getattr(rs.stream, "depth")
     else:
-        Bag2video(args.input).bag2video(args.output, args.stream, args.format, args.fps, (args.width, args.height))
+        is_color = False
+        try:
+            args.stream = getattr(rs.stream, args.stream)
+        except Exception as e:
+            print("You put the wrong stream")
+            exit()
+
+    if os.path.isdir(args.output):
+        Bag2video(args.input).bag2image(args.output, args.stream, args.format, args.fps, is_color=is_color)
+    else:
+        Bag2video(args.input).bag2video(args.output, args.stream, args.format, args.fps, (args.width, args.height),
+                                        is_color=is_color)
 
